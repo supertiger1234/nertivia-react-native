@@ -5,6 +5,7 @@ import {Animated, Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import {RootStoreInterface, storeContext} from '../stores/RootStore';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import style from '../style';
+import config from '../config';
 
 interface State {
   moveUpValue: Animated.Value;
@@ -22,6 +23,9 @@ export default class DrawerNav extends Component<any, State> {
   }
   get me() {
     return this.store.meStore.user;
+  }
+  get selectedTab() {
+    return this.store.stateStore.selectedTab;
   }
 
   animateHide() {
@@ -58,7 +62,9 @@ export default class DrawerNav extends Component<any, State> {
         <View style={{overflow: 'hidden', borderRadius: 4}}>
           <Pressable
             android_ripple={{color: 'white'}}
-            onPress={() => {}}
+            onPress={() => {
+              this.store.stateStore.setSelectedTab(props.name);
+            }}
             // eslint-disable-next-line react-native/no-inline-styles
             style={{
               backgroundColor: props.selected
@@ -100,7 +106,7 @@ export default class DrawerNav extends Component<any, State> {
             <Image
               style={{width: 26, height: 26, borderRadius: 26}}
               source={{
-                uri: 'https://media.nertivia.tk/' + this.me?.avatar,
+                uri: config.nertiviaCDN + this.me?.avatar,
               }}
             />
             <Text
@@ -122,11 +128,19 @@ export default class DrawerNav extends Component<any, State> {
           styleSheet.container,
           {transform: [{translateY: this.state.moveUpValue}]},
         ]}>
-        <Item icon="forum" name="DMs" selected={true} />
-        <Item icon="dns" name="Servers" />
+        <Item icon="forum" name="DMs" selected={this.selectedTab === 'DMs'} />
+        <Item
+          icon="dns"
+          name="Servers"
+          selected={this.selectedTab === 'Servers'}
+        />
         <View style={{flex: 1}} />
         {this.me && <ProfileItem />}
-        <Item icon="settings" name="Settings" />
+        <Item
+          icon="settings"
+          name="Settings"
+          selected={this.selectedTab === 'Settings'}
+        />
       </Animated.View>
     );
   }

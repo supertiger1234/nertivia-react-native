@@ -2,6 +2,7 @@ import {observer} from 'mobx-react';
 import React, {Component} from 'react';
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import {Navigation} from 'react-native-navigation';
+import DrawerSideBar from '../components/DrawerSideBar';
 import {RootStoreInterface, storeContext} from '../stores/RootStore';
 import style from '../style';
 
@@ -35,7 +36,7 @@ export default class LeftDrawer extends Component {
     return (
       <View style={[style.backgroundColor, styleSheet.container]}>
         <SafeAreaView>
-          <Text>{this.me?.username}</Text>
+          <DrawerSideBar />
         </SafeAreaView>
       </View>
     );
