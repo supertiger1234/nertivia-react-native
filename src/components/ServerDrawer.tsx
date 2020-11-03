@@ -1,5 +1,5 @@
 import {observer} from 'mobx-react';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Animated, Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 import config from '../config';
@@ -8,33 +8,44 @@ import {store} from '../stores/RootStore';
 import ChannelTemplate from './ChannelTemplate';
 
 export default () => {
+  const [mounted, setMounted] = useState(false);
   const scaleBannerAnimVal = new Animated.Value(0.8);
   const transChanListVal = new Animated.Value(30);
+  const opacityAnim = new Animated.Value(0);
   const safeTop = StaticSafeAreaInsets.safeAreaInsetsTop;
   const server =
     store.serverStore.servers[store.stateStore.selectedServerID || ''];
 
-  Animated.timing(scaleBannerAnimVal, {
-    toValue: 1,
-    duration: 200,
-    useNativeDriver: true,
-  }).start();
-  Animated.timing(transChanListVal, {
-    toValue: 0,
-    duration: 200,
-    useNativeDriver: true,
-  }).start();
-
+  if (!mounted) {
+    setTimeout(() => {
+      setMounted(true);
+    }, 0);
+    return <View />;
+  }
+  setTimeout(() => {
+    Animated.timing(scaleBannerAnimVal, {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+    Animated.timing(transChanListVal, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+    Animated.timing(opacityAnim, {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  }, 0);
   return (
     <View style={styleSheet.container}>
-      <View style={[styleSheet.header, {paddingTop: safeTop}]}>
-        <Text style={styleSheet.serverName}>{server.name}</Text>
-      </View>
       {server.banner && (
         <Animated.View
           style={{
             transform: [{scale: scaleBannerAnimVal}],
-            opacity: scaleBannerAnimVal,
+            opacity: opacityAnim,
           }}>
           <Image
             resizeMode="cover"
@@ -47,7 +58,7 @@ export default () => {
         contentContainerStyle={{paddingBottom: 50}}
         style={{
           transform: [{translateY: transChanListVal}],
-          opacity: scaleBannerAnimVal,
+          opacity: opacityAnim,
         }}>
         {store.channelStore
           .serverChannels(store.stateStore.selectedServerID || '')
@@ -61,13 +72,6 @@ export default () => {
 
 const styleSheet = StyleSheet.create({
   container: {flex: 1, overflow: 'hidden'},
-  header: {
-    backgroundColor: 'rgba(0,0,0,0.3)',
-
-    height: 60,
-    justifyContent: 'center',
-  },
-  serverName: {alignSelf: 'center', color: 'white'},
   banner: {
     margin: 5,
     height: 130,

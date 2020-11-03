@@ -1,4 +1,4 @@
-import {observer, Observer} from 'mobx-react';
+import {observer} from 'mobx-react';
 import React from 'react';
 import {Image, Pressable, StyleSheet, View} from 'react-native';
 import config from '../config';

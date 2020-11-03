@@ -44,17 +44,43 @@ export default class LeftDrawer extends Component {
     return (
       <View style={[style.backgroundColor, styleSheet.container]}>
         <DrawerSideBar />
-        {this.currentTab === 'Servers' && this.selectedServerID && (
-          <ServerDrawer key={this.selectedServerID} />
-        )}
+        <View style={styleSheet.drawerContent}>
+          <DrawerHeader />
+          {this.currentTab === 'Servers' && this.selectedServerID && (
+            <ServerDrawer key={this.selectedServerID} />
+          )}
+        </View>
       </View>
     );
   }
 }
+
+const DrawerHeader = () => {
+  const safeTop = StaticSafeAreaInsets.safeAreaInsetsTop;
+  let name = '';
+  const selectedTab = store.stateStore.selectedTab;
+  if (selectedTab === 'Servers' && store.stateStore.selectedServerID) {
+    name = store.serverStore.servers?.[store.stateStore.selectedServerID]?.name;
+  }
+  return (
+    <View style={[styleSheet.header, {paddingTop: safeTop}]}>
+      <Text style={styleSheet.headerName}>{name || selectedTab}</Text>
+    </View>
+  );
+};
 
 const styleSheet = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
   },
+  drawerContent: {
+    flex: 1,
+  },
+  header: {
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    height: 60,
+    justifyContent: 'center',
+  },
+  headerName: {alignSelf: 'center', color: 'white'},
 });

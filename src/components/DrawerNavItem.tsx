@@ -5,24 +5,22 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {store} from '../stores/RootStore';
 import style from '../style';
 
-export default observer(
-  (props: {icon: string; name: string; selected?: string}) => {
-    const selected = props.selected === props.name;
-    return (
-      <View style={{overflow: 'hidden', borderRadius: 4}}>
-        <Pressable
-          android_ripple={{color: 'rgba(255, 255, 255, 0.6)'}}
-          onPress={() => {
-            store.stateStore.setSelectedTab(props.name);
-          }}
-          style={[styleSheet.button, selected && styleSheet.selectedButton]}>
-          <Icon name={props.icon} size={25} color="white" />
-          <Text style={{color: 'white', fontSize: 12}}>{props.name}</Text>
-        </Pressable>
-      </View>
-    );
-  },
-);
+export default (props: {icon: string; name: string; selected?: string}) => {
+  const selected = props.selected === props.name;
+  return (
+    <View style={{overflow: 'hidden', borderRadius: 4}}>
+      <Pressable
+        android_ripple={{color: 'rgba(255, 255, 255, 0.6)'}}
+        onPress={() => {
+          store.stateStore.setSelectedTab(props.name);
+        }}
+        style={[styleSheet.button, selected && styleSheet.selectedButton]}>
+        <Icon name={props.icon} size={25} color="white" />
+        <Text style={{color: 'white', fontSize: 12}}>{props.name}</Text>
+      </Pressable>
+    </View>
+  );
+};
 
 const styleSheet = StyleSheet.create({
   button: {
