@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 import {RootStoreInterface, storeContext} from '../stores/RootStore';
-import serverTemplate from './ServerTemplate';
+import ServerTemplate from './ServerTemplate';
 
 @observer
 export default class DrawerSideBar extends Component {
@@ -20,7 +20,7 @@ export default class DrawerSideBar extends Component {
           <FlatList
             contentContainerStyle={{paddingBottom: 50, paddingTop: safeTop}}
             data={serverArr}
-            renderItem={serverTemplate}
+            renderItem={({item}) => <ServerTemplate item={item} />}
             keyExtractor={(item) => item.server_id}
           />
         )}
@@ -32,7 +32,7 @@ export default class DrawerSideBar extends Component {
 const styleSheet = StyleSheet.create({
   container: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    width: 60,
+    width: 70,
     height: '100%',
   },
 });

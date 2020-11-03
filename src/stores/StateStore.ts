@@ -8,12 +8,15 @@ export interface IStateStore {
   setLeftDrawerVisible: (visible: any, applyAction?: boolean) => void;
   selectedTab: string;
   setSelectedTab: (val: string) => void;
+  selectedServerID: string | null;
+  setSelectedServerID: (serverID: string) => void;
 }
 
 export class StateStore implements IStateStore {
   lastNotificationData = 'Hello World';
   leftDrawerVisible = false;
   selectedTab = 'DMs';
+  selectedServerID: string | null = null;
   constructor() {
     makeAutoObservable(this);
   }
@@ -35,5 +38,8 @@ export class StateStore implements IStateStore {
   }
   setSelectedTab(val: string) {
     this.selectedTab = val;
+  }
+  setSelectedServerID(serverID: string) {
+    this.selectedServerID = serverID;
   }
 }

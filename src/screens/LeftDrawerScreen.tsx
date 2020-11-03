@@ -2,8 +2,10 @@ import {observer} from 'mobx-react';
 import React, {Component} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Navigation} from 'react-native-navigation';
+import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 import DrawerSideBar from '../components/DrawerSideBar';
-import {RootStoreInterface, storeContext} from '../stores/RootStore';
+import ServerDrawer from '../components/ServerDrawer';
+import {RootStoreInterface, store, storeContext} from '../stores/RootStore';
 import style from '../style';
 
 @observer
@@ -29,6 +31,12 @@ export default class LeftDrawer extends Component {
   get store() {
     return this.context as RootStoreInterface;
   }
+  get currentTab() {
+    return this.store.stateStore.selectedTab;
+  }
+  get selectedServerID() {
+    return this.store.stateStore.selectedServerID;
+  }
   get me() {
     return this.store.meStore.user;
   }
@@ -36,9 +44,9 @@ export default class LeftDrawer extends Component {
     return (
       <View style={[style.backgroundColor, styleSheet.container]}>
         <DrawerSideBar />
-        <Text style={{color: 'white'}}>
-          {/* {this.store.stateStore.selectedTab} */}
-        </Text>
+        {this.currentTab === 'Servers' && this.selectedServerID && (
+          <ServerDrawer key={this.selectedServerID} />
+        )}
       </View>
     );
   }

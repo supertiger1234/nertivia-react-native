@@ -1,19 +1,28 @@
+import {observer, Observer} from 'mobx-react';
 import React from 'react';
-import {Image, Pressable, StyleSheet} from 'react-native';
+import {Image, Pressable, StyleSheet, View} from 'react-native';
 import config from '../config';
 import Server from '../interfaces/Server';
-
-export default ({item}: {item: Server}) => {
+import {store} from '../stores/RootStore';
+import style from '../style';
+export default observer(({item}: {item: Server}) => {
+  const selected = store.stateStore.selectedServerID === item.server_id;
   let avatar = {uri: config.nertiviaCDN + item.avatar};
   if (!item.avatar) {
     avatar = require('../assets/logo.png');
   }
   return (
-    <Pressable android_ripple={styleSheet.container}>
+    <Pressable
+      onPress={() => {
+        store.stateStore.setSelectedServerID(item.server_id);
+      }}>
+      {selected && (
+        <View style={[styleSheet.selected, style.primaryBoxColor]} />
+      )}
       <Image source={avatar} style={styleSheet.image} />
     </Pressable>
   );
-};
+});
 const styleSheet = StyleSheet.create({
   container: {
     color: 'rgba(255, 255, 255, 0.5)',
@@ -25,5 +34,11 @@ const styleSheet = StyleSheet.create({
     margin: 5,
     justifyContent: 'center',
     alignSelf: 'center',
+  },
+  selected: {
+    position: 'absolute',
+    top: 5,
+    bottom: 5,
+    width: 2,
   },
 });
