@@ -6,7 +6,7 @@ export default (props: {me: any}) => {
   return (
     <View style={styleSheet.container}>
       <Pressable
-        android_ripple={{color: 'white'}}
+        android_ripple={{color: 'rgba(255, 255, 255, 0.6)'}}
         onPress={() => {}}
         style={styleSheet.button}>
         <Image

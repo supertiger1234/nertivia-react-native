@@ -22,7 +22,7 @@ interface ReturnedServer {
   avatar: string;
   banner: string;
   channel_position: string[];
-  channels: ReturnedChannel[];
+  channels: ReturnedServerChannel[];
   creator: {
     uniqueID: string;
   };
@@ -31,7 +31,7 @@ interface ReturnedServer {
   server_id: string;
   verified: boolean;
 }
-interface ReturnedChannel {
+interface ReturnedServerChannel {
   channelID: string;
   name?: string;
   server_id?: string;
@@ -54,6 +54,7 @@ export default function connectionEvents(socket: SocketIOClient.Socket) {
 
     // set servers
     const servers: any = {};
+    const channels: any = {};
     for (let index = 0; index < data.user.servers.length; index++) {
       const server = data.user.servers[index];
       servers[server.server_id] = {
@@ -66,7 +67,17 @@ export default function connectionEvents(socket: SocketIOClient.Socket) {
         verified: server.verified,
         channel_position: server.channel_position,
       };
+      for (let x = 0; x < server.channels.length; x++) {
+        const channel = server.channels[x];
+        channels[channel.channelID] = {
+          channelID: channel.channelID,
+          name: channel.name,
+          server_id: channel.server_id,
+          lastMessaged: channel.lastMessaged,
+        };
+      }
     }
     store.serverStore.initServer(servers);
+    store.channelStore.initChannels(channels);
   });
 }

@@ -11,6 +11,7 @@ export default observer(
     return (
       <View style={{overflow: 'hidden', borderRadius: 4}}>
         <Pressable
+          android_ripple={{color: 'rgba(255, 255, 255, 0.6)'}}
           onPress={() => {
             store.stateStore.setSelectedTab(props.name);
           }}
