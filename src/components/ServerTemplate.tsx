@@ -15,6 +15,7 @@ export default observer(({item}: {item: Server}) => {
     <Pressable
       onPress={() => {
         store.stateStore.setSelectedServerID(item.server_id);
+        store.stateStore.setSelectedChannelID(item.default_channel_id);
         store.stateStore.setSelectedTab('Servers');
       }}>
       {selected && (

@@ -54,6 +54,7 @@ Navigation.events().registerAppLaunchedListener(async () => {
     Navigation.setRoot({
       root: {
         sideMenu: {
+          id: 'DRAWERS',
           options: {
             sideMenu: {
               left: {
@@ -65,7 +66,6 @@ Navigation.events().registerAppLaunchedListener(async () => {
               backgroundColor: 'transparent',
             },
           },
-          id: 'DRAWERS',
           left: {
             component: {
               id: 'LEFT_DRAWER',

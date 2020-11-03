@@ -1,8 +1,11 @@
+import {observer} from 'mobx-react';
 import React from 'react';
 import {Animated, Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 import config from '../config';
+import Channel from '../interfaces/Channel';
 import {store} from '../stores/RootStore';
+import ChannelTemplate from './ChannelTemplate';
 
 export default () => {
   const scaleBannerAnimVal = new Animated.Value(0.8);
@@ -49,11 +52,7 @@ export default () => {
         {store.channelStore
           .serverChannels(store.stateStore.selectedServerID || '')
           .map((channel) => (
-            <Pressable
-              android_ripple={{color: 'rgba(255, 255, 255, 0.6)'}}
-              key={channel.channelID}>
-              <Text style={{color: 'white', padding: 10}}>{channel.name}</Text>
-            </Pressable>
+            <ChannelTemplate channel={channel} key={channel.channelID} />
           ))}
       </Animated.ScrollView>
     </View>

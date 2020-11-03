@@ -10,6 +10,8 @@ export interface IStateStore {
   setSelectedTab: (val: string) => void;
   selectedServerID: string | null;
   setSelectedServerID: (serverID: string) => void;
+  selectedChannelID: string | null;
+  setSelectedChannelID: (channelID: string) => void;
 }
 
 export class StateStore implements IStateStore {
@@ -17,6 +19,7 @@ export class StateStore implements IStateStore {
   leftDrawerVisible = false;
   selectedTab = 'DMs';
   selectedServerID: string | null = null;
+  selectedChannelID: string | null = null;
   constructor() {
     makeAutoObservable(this);
   }
@@ -41,5 +44,8 @@ export class StateStore implements IStateStore {
   }
   setSelectedServerID(serverID: string) {
     this.selectedServerID = serverID;
+  }
+  setSelectedChannelID(channelID: string) {
+    this.selectedChannelID = channelID;
   }
 }
