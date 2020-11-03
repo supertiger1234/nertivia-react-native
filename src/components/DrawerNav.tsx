@@ -3,9 +3,10 @@ import {observer} from 'mobx-react';
 import React, {Component} from 'react';
 import {Animated, Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import {RootStoreInterface, storeContext} from '../stores/RootStore';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import style from '../style';
 import config from '../config';
+import DrawerNavItem from './DrawerNavItem';
+import DrawerNavProfileItem from './DrawerNavProfileItem';
 
 interface State {
   moveUpValue: Animated.Value;
@@ -57,89 +58,20 @@ export default class DrawerNav extends Component<any, State> {
   }
 
   render() {
-    const Item = (props: {icon: string; name: string; selected?: boolean}) => {
-      return (
-        <View style={{overflow: 'hidden', borderRadius: 4}}>
-          <Pressable
-            android_ripple={{color: 'white'}}
-            onPress={() => {
-              this.store.stateStore.setSelectedTab(props.name);
-            }}
-            // eslint-disable-next-line react-native/no-inline-styles
-            style={{
-              backgroundColor: props.selected
-                ? style.primaryBoxColor.backgroundColor
-                : '',
-              height: 50,
-              minWidth: 60,
-              paddingLeft: 5,
-              paddingRight: 5,
-              opacity: props.selected ? 1 : 0.7,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Icon name={props.icon} size={25} color="white" />
-            <Text style={{color: 'white', fontSize: 12}}>{props.name}</Text>
-          </Pressable>
-        </View>
-      );
-    };
-    const ProfileItem = (props: {selected?: boolean}) => {
-      return (
-        <View style={{overflow: 'hidden', borderRadius: 4}}>
-          <Pressable
-            android_ripple={{color: 'white'}}
-            onPress={() => {}}
-            // eslint-disable-next-line react-native/no-inline-styles
-            style={{
-              backgroundColor: props.selected
-                ? style.primaryBoxColor.backgroundColor
-                : '',
-              height: 50,
-              minWidth: 60,
-              maxWidth: 100,
-              paddingLeft: 5,
-              paddingRight: 5,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Image
-              style={{width: 26, height: 26, borderRadius: 26}}
-              source={{
-                uri: config.nertiviaCDN + this.me?.avatar,
-              }}
-            />
-            <Text
-              style={{
-                color: 'white',
-                fontSize: 12,
-                opacity: props.selected ? 1 : 0.7,
-              }}>
-              {this.me?.username}
-            </Text>
-          </Pressable>
-        </View>
-      );
-    };
-
     return (
       <Animated.View
         style={[
           styleSheet.container,
           {transform: [{translateY: this.state.moveUpValue}]},
         ]}>
-        <Item icon="forum" name="DMs" selected={this.selectedTab === 'DMs'} />
-        <Item
-          icon="dns"
-          name="Servers"
-          selected={this.selectedTab === 'Servers'}
-        />
+        <DrawerNavItem icon="forum" name="DMs" selected={this.selectedTab} />
+        <DrawerNavItem icon="dns" name="Servers" selected={this.selectedTab} />
         <View style={{flex: 1}} />
-        {this.me && <ProfileItem />}
-        <Item
+        {this.me && <DrawerNavProfileItem me={this.me} />}
+        <DrawerNavItem
           icon="settings"
           name="Settings"
-          selected={this.selectedTab === 'Settings'}
+          selected={this.selectedTab}
         />
       </Animated.View>
     );

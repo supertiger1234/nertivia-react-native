@@ -1,17 +1,5 @@
 import {makeAutoObservable} from 'mobx';
-
-interface Server {
-  avatar: string;
-  banner: string;
-  creator: {
-    uniqueID: string;
-  };
-  default_channel_id: string;
-  name: string;
-  server_id: string;
-  verified: boolean;
-  channel_position?: string[];
-}
+import Server from '../interfaces/Server';
 
 interface ServerObj {
   [key: string]: Server;

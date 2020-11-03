@@ -1,6 +1,6 @@
 import {observer} from 'mobx-react';
 import React, {Component} from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {Navigation} from 'react-native-navigation';
 import DrawerSideBar from '../components/DrawerSideBar';
 import {RootStoreInterface, storeContext} from '../stores/RootStore';
@@ -35,9 +35,10 @@ export default class LeftDrawer extends Component {
   render() {
     return (
       <View style={[style.backgroundColor, styleSheet.container]}>
-        <SafeAreaView>
-          <DrawerSideBar />
-        </SafeAreaView>
+        <DrawerSideBar />
+        <Text style={{color: 'white'}}>
+          {/* {this.store.stateStore.selectedTab} */}
+        </Text>
       </View>
     );
   }
@@ -46,5 +47,6 @@ export default class LeftDrawer extends Component {
 const styleSheet = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'row',
   },
 });
