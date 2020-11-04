@@ -2,21 +2,42 @@ import {observer} from 'mobx-react';
 import React, {Component} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
+import MessageArea from './components/MessageArea';
 
 import {socketInstance} from './socketio/socketIOInstance';
-import {store} from './stores/RootStore';
+import {RootStoreInterface, store, storeContext} from './stores/RootStore';
 import style from './style';
 
+@observer
 export default class App extends Component {
+  static contextType = storeContext;
   componentDidMount() {
     // connects
     socketInstance();
+  }
+  get store() {
+    return this.context as RootStoreInterface;
+  }
+  get currentTab() {
+    return this.store.stateStore.selectedTab;
+  }
+  get selectedChannelID() {
+    return this.store.stateStore.selectedChannelID;
+  }
+  get showMessageArea() {
+    if (!['Servers', 'DMs'].includes(this.currentTab)) {
+      return false;
+    }
+    if (!this.selectedChannelID) {
+      return false;
+    }
+    return true;
   }
   render() {
     return (
       <View style={[style.backgroundColor, styleSheet.container]}>
         <DrawerHeader />
-        <Text>hello</Text>
+        {this.showMessageArea && <MessageArea key={this.selectedChannelID} />}
       </View>
     );
   }

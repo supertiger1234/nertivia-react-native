@@ -1,5 +1,6 @@
 import React from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import config from '../config';
 
 export default (props: {me: any}) => {
@@ -9,10 +10,11 @@ export default (props: {me: any}) => {
         android_ripple={{color: 'rgba(255, 255, 255, 0.6)'}}
         onPress={() => {}}
         style={styleSheet.button}>
-        <Image
+        <FastImage
+          resizeMode={FastImage.resizeMode.cover}
           style={styleSheet.image}
           source={{
-            uri: config.nertiviaCDN + props.me?.avatar,
+            uri: config.nertiviaCDN + props.me?.avatar + '?type=webp',
           }}
         />
         <Text style={styleSheet.text}>{props.me?.username}</Text>

@@ -1,6 +1,7 @@
 import {observer} from 'mobx-react';
 import React, {useEffect, useState} from 'react';
 import {Animated, Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 import config from '../config';
 import Channel from '../interfaces/Channel';
@@ -47,10 +48,10 @@ export default () => {
             transform: [{scale: scaleBannerAnimVal}],
             opacity: opacityAnim,
           }}>
-          <Image
-            resizeMode="cover"
+          <FastImage
+            resizeMode={FastImage.resizeMode.cover}
             style={styleSheet.banner}
-            source={{uri: config.nertiviaCDN + server.banner}}
+            source={{uri: config.nertiviaCDN + server.banner + '?type=webp'}}
           />
         </Animated.View>
       )}

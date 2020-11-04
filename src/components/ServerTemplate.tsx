@@ -1,13 +1,14 @@
 import {observer} from 'mobx-react';
 import React from 'react';
 import {Image, Pressable, StyleSheet, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import config from '../config';
 import Server from '../interfaces/Server';
 import {store} from '../stores/RootStore';
 import style from '../style';
 export default observer(({item}: {item: Server}) => {
   const selected = store.stateStore.selectedServerID === item.server_id;
-  let avatar = {uri: config.nertiviaCDN + item.avatar};
+  let avatar = {uri: config.nertiviaCDN + item.avatar + '?type=webp'};
   if (!item.avatar) {
     avatar = require('../assets/logo.png');
   }
@@ -21,7 +22,11 @@ export default observer(({item}: {item: Server}) => {
       {selected && (
         <View style={[styleSheet.selected, style.primaryBoxColor]} />
       )}
-      <Image source={avatar} style={styleSheet.image} />
+      <FastImage
+        resizeMode={FastImage.resizeMode.cover}
+        source={avatar}
+        style={styleSheet.image}
+      />
     </Pressable>
   );
 });

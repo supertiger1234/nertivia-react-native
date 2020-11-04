@@ -1,7 +1,12 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios, {AxiosResponse} from 'axios';
+import Message from './interfaces/Message';
 
 const instance = Axios.create({
   baseURL: 'https://supertiger.tk/api/',
+});
+AsyncStorage.getItem('token').then((token) => {
+  instance.defaults.headers.common.authorization = token;
 });
 
 export default instance;
@@ -16,4 +21,15 @@ export function postLogin(
   token: string,
 ): Promise<AxiosResponse<LoginResponse>> {
   return instance.post('user/login', {email, password, token});
+}
+
+interface MessageFetchResponse {
+  channelID: string;
+  messages: Message[];
+}
+
+export function fetchMessages(
+  channelID: string,
+): Promise<AxiosResponse<MessageFetchResponse>> {
+  return instance.get(`messages/channels/${channelID}`);
 }

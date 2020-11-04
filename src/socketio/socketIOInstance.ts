@@ -1,6 +1,7 @@
 import IO from 'socket.io-client';
 import config from '../config';
 import connectionEvents from './connectionEvents';
+import messageEvents from './messageEvents';
 
 let socketIO: SocketIOClient.Socket | null = null;
 
@@ -18,4 +19,5 @@ function setupEvents() {
     return;
   }
   connectionEvents(socketIO);
+  messageEvents(socketIO);
 }
