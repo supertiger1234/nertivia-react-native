@@ -12,7 +12,8 @@ import {
 } from 'react-native';
 import {Navigation} from 'react-native-navigation';
 import WebView from 'react-native-webview';
-import {postLogin} from '../axiosInstance';
+import {loadMainPage} from '../..';
+import {postLogin, putAuthHeader} from '../axiosInstance';
 import style from '../style';
 
 interface State {
@@ -38,13 +39,8 @@ export default class LoginScreen extends Component<any, State> {
     postLogin(this.state.email, this.state.password, token)
       .then(async ({data}) => {
         await AsyncStorage.setItem('token', data.token);
-        Navigation.setRoot({
-          root: {
-            component: {
-              name: 'com.nertivia.App',
-            },
-          },
-        });
+        putAuthHeader();
+        loadMainPage();
       })
       .catch((err) => {
         this.setState({loggingIn: false, showCaptcha: false});

@@ -25,7 +25,7 @@ export class RootStore {
     this.meStore = new MeStore();
     this.serverStore = new ServerStore();
     this.channelStore = new ChannelStore();
-    this.messageStore = new MessageStore();
+    this.messageStore = new MessageStore(this);
   }
 }
 

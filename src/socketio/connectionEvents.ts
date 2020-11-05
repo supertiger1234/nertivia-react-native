@@ -40,6 +40,11 @@ interface ReturnedServerChannel {
 
 export default function connectionEvents(socket: SocketIOClient.Socket) {
   socket.on('connect', async () => {
+    // set heartbeat to 5000ms
+    clearInterval(socket.io.engine.pingTimeoutTimer);
+    socket.io.engine.pingTimeout = 5000;
+    socket.io.engine.onHeartbeat();
+
     const token = await AsyncStorage.getItem('token');
     socket.emit('authentication', {token: token});
   });

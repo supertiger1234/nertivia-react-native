@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {Keyboard, Pressable, StyleSheet, TextInput, View} from 'react-native';
+import {Pressable, StyleSheet, TextInput, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {store} from '../stores/RootStore';
 
@@ -15,16 +15,13 @@ export default () => {
     if (!message.trim() || !channelID) {
       return;
     }
-    const msg = message.trim();
+    const msg = message;
     textInput.current?.clear();
     setMessage('');
     setTimeout(() => {
-      store.messageStore.addMessage({
-        channelID: channelID,
-        created: Date.now(),
-        creator: store.meStore.user as any,
+      store.messageStore.sendMessage({
         message: msg,
-        tempID: Math.random().toString(),
+        channelID: channelID,
       });
     }, 10);
   };
@@ -43,7 +40,10 @@ export default () => {
         <Pressable
           android_ripple={{color: 'white'}}
           onPress={sendPressed}
-          style={[style.primaryBoxColor, styleSheet.button]}>
+          style={[
+            !!message.trim() && style.primaryBoxColor,
+            styleSheet.button,
+          ]}>
           <Icon name="send" color="white" size={20} />
         </Pressable>
       </View>

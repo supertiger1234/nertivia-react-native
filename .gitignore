@@ -64,3 +64,5 @@ buck-out/
 
 android/app/google-services.json
 src/config.ts
+android/app/keystore.properties
+android/keystore.properties

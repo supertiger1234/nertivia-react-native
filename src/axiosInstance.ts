@@ -1,13 +1,19 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios, {AxiosResponse} from 'axios';
 import Message from './interfaces/Message';
+import {socketInstance} from './socketio/socketIOInstance';
 
 const instance = Axios.create({
   baseURL: 'https://supertiger.tk/api/',
 });
-AsyncStorage.getItem('token').then((token) => {
-  instance.defaults.headers.common.authorization = token;
-});
+
+putAuthHeader();
+
+export function putAuthHeader() {
+  AsyncStorage.getItem('token').then((token) => {
+    instance.defaults.headers.common.authorization = token;
+  });
+}
 
 export default instance;
 
@@ -32,4 +38,21 @@ export function fetchMessages(
   channelID: string,
 ): Promise<AxiosResponse<MessageFetchResponse>> {
   return instance.get(`messages/channels/${channelID}`);
+}
+
+interface PostMessageResponse {
+  tempID: string;
+  messageCreated: Message;
+}
+
+export function postMessage(
+  message: string,
+  tempID: string,
+  channelID: string,
+): Promise<AxiosResponse<PostMessageResponse>> {
+  return instance.post(`messages/channels/${channelID}`, {
+    message,
+    tempID,
+    socketID: socketInstance().id,
+  });
 }
