@@ -1,5 +1,5 @@
-import React from 'react';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import React, {useState} from 'react';
+import {Animated, Pressable, StyleSheet, Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Message from '../interfaces/Message';
 import {store} from '../stores/RootStore';
@@ -39,15 +39,27 @@ export default React.memo(
       el = el.reverse();
     }
 
+    const [moveDown] = useState(new Animated.Value(-50));
+
+    Animated.timing(moveDown, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+
     return (
       <Pressable android_ripple={{color: 'rgba(255, 255, 255, 0.4)'}}>
-        <View
+        <Animated.View
+          onLayout={(r) => {
+            r.nativeEvent.layout;
+          }}
           style={[
             {padding: 3, flexDirection: 'row'},
             isCreatedByMe && {justifyContent: 'flex-end'},
+            {transform: [{translateX: moveDown}]},
           ]}>
           {el}
-        </View>
+        </Animated.View>
       </Pressable>
     );
   },
