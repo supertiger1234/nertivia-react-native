@@ -23,10 +23,6 @@ function generateNum(n: number): string {
   return ('' + number).substring(add);
 }
 
-interface groupedMessage extends Message {
-  grouped?: boolean;
-}
-
 export interface IMessageStore {
   messages: MessagesObj;
   fetchAndSetMessages: (channelID: string) => void;
@@ -39,7 +35,7 @@ export interface IMessageStore {
     tempID?: string;
     message: Partial<Message>;
   }) => void;
-  groupedChannelMessages(id: string): groupedMessage[];
+  groupedChannelMessages(id: string): any[];
 }
 
 export class MessageStore implements IMessageStore {
@@ -60,7 +56,7 @@ export class MessageStore implements IMessageStore {
       if (!messages) {
         return [];
       }
-      messages = messages.slice().reverse();
+
       const creatorMatch = (message1: Message, message2: Message) =>
         message1.creator.uniqueID === message2.creator.uniqueID;
 
@@ -77,26 +73,20 @@ export class MessageStore implements IMessageStore {
       };
 
       let count = 0;
-
-      const groupedMessages = [];
-      for (let index = messages.length - 1; index >= 0; index--) {
-        const currentMessage = messages[index];
+      return messages.map((currentMessage, index) => {
         const beforeMessage = messages[index - 1];
         if (!beforeMessage || !creatorMatch(beforeMessage, currentMessage)) {
           count = 0;
-          groupedMessages.push(currentMessage);
-          continue;
+          return [currentMessage, false];
         }
 
         if (count >= 4 || isMoreThanAMinute(beforeMessage, currentMessage)) {
           count = 0;
-          groupedMessages.push(currentMessage);
-          continue;
+          return [currentMessage, false];
         }
         count += 1;
-        groupedMessages.push({...currentMessage, grouped: true});
-      }
-      return groupedMessages;
+        return [currentMessage, true];
+      });
     };
   }
 
@@ -153,7 +143,7 @@ export class MessageStore implements IMessageStore {
     if (!messages) {
       return;
     }
-    this.messages[payload.channelID] = [payload, ...messages];
+    this.messages[payload.channelID] = [...messages, payload];
   };
   updateMessage = (payload: {
     channelID: string;
@@ -190,7 +180,7 @@ export class MessageStore implements IMessageStore {
   fetchAndSetMessages = (channelID: string) => {
     fetchMessages(channelID).then(
       action('fetchSuccess', (res: any) => {
-        const messages = res.data.messages;
+        const messages = res.data.messages.reverse();
         this.messages[channelID] = messages;
       }),
     );

@@ -5,53 +5,55 @@ import Message from '../interfaces/Message';
 import {store} from '../stores/RootStore';
 import AvatarTemplate from './AvatarTemplate';
 import fullDate, {time} from '../utils/date';
-interface GroupedMessage extends Message {
-  grouped: boolean;
-}
-export default React.memo(({message}: {message: GroupedMessage}) => {
-  const isCreatedByMe =
-    message.creator.uniqueID === store.meStore.user.uniqueID;
+export default React.memo(
+  ({message, grouped}: {message: Message; grouped: boolean}) => {
+    const isCreatedByMe =
+      message.creator.uniqueID === store.meStore.user.uniqueID;
 
-  const avatar = () => (
-    <AvatarTemplate size={40} imageID={message.creator.avatar} key={0} />
-  );
+    const avatar = () => (
+      <AvatarTemplate size={40} imageID={message.creator.avatar} key={0} />
+    );
 
-  const triangle = () => (
-    <View
-      style={[styleSheet.triangle, isCreatedByMe && styleSheet.reverseTriangle]}
-      key={1}
-    />
-  );
-
-  let el = [
-    !message.grouped && avatar(),
-    !message.grouped && triangle(),
-    message.grouped && (
-      <Text style={styleSheet.groupedTime} key={2}>
-        {time(message.created)}
-      </Text>
-    ),
-    <Bubble message={message} key={3} />,
-    <MessageSide message={message} key={4} />,
-  ];
-  if (isCreatedByMe) {
-    el = el.reverse();
-  }
-
-  return (
-    <Pressable android_ripple={{color: 'rgba(255, 255, 255, 0.4)'}}>
+    const triangle = () => (
       <View
         style={[
-          {padding: 3, flexDirection: 'row'},
-          isCreatedByMe && {justifyContent: 'flex-end'},
-        ]}>
-        {el}
-      </View>
-    </Pressable>
-  );
-});
+          styleSheet.triangle,
+          isCreatedByMe && styleSheet.reverseTriangle,
+        ]}
+        key={1}
+      />
+    );
 
-const Bubble = ({message}: {message: GroupedMessage}) => {
+    let el = [
+      !grouped && avatar(),
+      !grouped && triangle(),
+      grouped && (
+        <Text style={styleSheet.groupedTime} key={2}>
+          {time(message.created)}
+        </Text>
+      ),
+      <Bubble message={message} grouped={grouped} key={3} />,
+      <MessageSide message={message} key={4} />,
+    ];
+    if (isCreatedByMe) {
+      el = el.reverse();
+    }
+
+    return (
+      <Pressable android_ripple={{color: 'rgba(255, 255, 255, 0.4)'}}>
+        <View
+          style={[
+            {padding: 3, flexDirection: 'row'},
+            isCreatedByMe && {justifyContent: 'flex-end'},
+          ]}>
+          {el}
+        </View>
+      </Pressable>
+    );
+  },
+);
+
+const Bubble = ({message, grouped}: {message: Message; grouped: boolean}) => {
   const isCreatedByMe =
     message.creator.uniqueID === store.meStore.user.uniqueID;
   return (
@@ -59,9 +61,9 @@ const Bubble = ({message}: {message: GroupedMessage}) => {
       style={[
         styleSheet.bubble,
         isCreatedByMe && styleSheet.reverseBubble,
-        message.grouped && styleSheet.groupedBubble,
+        grouped && styleSheet.groupedBubble,
       ]}>
-      {!message.grouped && (
+      {!grouped && (
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styleSheet.username}>{message.creator.username}</Text>
           <Text style={styleSheet.time}>{fullDate(message.created)}</Text>
