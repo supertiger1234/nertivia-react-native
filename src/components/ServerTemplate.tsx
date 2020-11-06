@@ -1,13 +1,15 @@
 import {observer} from 'mobx-react';
 import React from 'react';
-import {Image, Pressable, StyleSheet, View} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import config from '../config';
 import Server from '../interfaces/Server';
-import {store} from '../stores/RootStore';
+import {storeContext} from '../stores/RootStore';
 import style from '../style';
 export default observer(({item}: {item: Server}) => {
-  const selected = store.stateStore.selectedServerID === item.server_id;
+  const {stateStore} = React.useContext(storeContext);
+
+  const selected = stateStore.selectedServerID === item.server_id;
   let avatar = {uri: config.nertiviaCDN + item.avatar + '?type=webp'};
   if (!item.avatar) {
     avatar = require('../assets/logo.png');
@@ -15,9 +17,9 @@ export default observer(({item}: {item: Server}) => {
   return (
     <Pressable
       onPress={() => {
-        store.stateStore.setSelectedServerID(item.server_id);
-        store.stateStore.setSelectedChannelID(item.default_channel_id);
-        store.stateStore.setSelectedTab('Servers');
+        stateStore.setSelectedServerID(item.server_id);
+        stateStore.setSelectedChannelID(item.default_channel_id);
+        stateStore.setSelectedTab('Servers');
       }}>
       {selected && (
         <View style={[styleSheet.selected, style.primaryBoxColor]} />

@@ -1,7 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {eventEmitter} from '../../FCM';
-import User from '../interfaces/User';
 import {store} from '../stores/RootStore';
+import {socketInstance} from './socketIOInstance';
 
 interface SuccessEvent {
   user: MeUser;
@@ -45,10 +44,30 @@ export default function connectionEvents(socket: SocketIOClient.Socket) {
     socket.io.engine.pingTimeout = 5000;
     socket.io.engine.onHeartbeat();
 
+    store.meStore.setConnectionDetails({
+      connected: false,
+      message: 'Authenticating...',
+      socketID: socket.id,
+    });
+
     const token = await AsyncStorage.getItem('token');
     socket.emit('authentication', {token: token});
   });
+  socket.on('auth_err', (data: string) => {
+    store.meStore.setConnectionDetails({connected: false, message: data});
+  });
+  socket.on('reconnecting', () => {
+    store.meStore.setConnectionDetails({
+      connected: false,
+      message: 'Reconnecting...',
+    });
+  });
   socket.on('success', (data: SuccessEvent) => {
+    store.meStore.setConnectionDetails({
+      connected: true,
+      message: null,
+      socketID: socket.id,
+    });
     store.meStore.initUser({
       avatar: data.user.avatar,
       email: data.user.email,

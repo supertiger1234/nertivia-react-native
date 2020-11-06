@@ -12,9 +12,9 @@ import {
 } from 'react-native';
 import {Navigation} from 'react-native-navigation';
 import WebView from 'react-native-webview';
-import {loadMainPage} from '../..';
 import {postLogin, putAuthHeader} from '../axiosInstance';
 import style from '../style';
+import {mainPageOptions} from '../utils/screens';
 
 interface State {
   email: string;
@@ -40,7 +40,7 @@ export default class LoginScreen extends Component<any, State> {
       .then(async ({data}) => {
         await AsyncStorage.setItem('token', data.token);
         putAuthHeader();
-        loadMainPage();
+        Navigation.setRoot(mainPageOptions);
       })
       .catch((err) => {
         this.setState({loggingIn: false, showCaptcha: false});
@@ -118,6 +118,9 @@ export default class LoginScreen extends Component<any, State> {
         )}
         {!this.state.showCaptcha && this.MainContent()}
         {!this.state.loggingIn && this.state.showCaptcha && this.HCaptcha()}
+        {this.state.loggingIn && (
+          <Text style={styleSheet.title}>Logging In...</Text>
+        )}
       </ScrollView>
     );
   }
@@ -143,6 +146,9 @@ const styleSheet = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     fontSize: 18,
+    color: 'white',
+    alignSelf: 'center',
+    justifyContent: 'center',
   },
   formContainer: {
     margin: 10,

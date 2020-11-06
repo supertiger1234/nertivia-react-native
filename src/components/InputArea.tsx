@@ -1,15 +1,18 @@
+import {observer} from 'mobx-react';
 import React, {useRef, useState} from 'react';
 import {Pressable, StyleSheet, TextInput, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {store} from '../stores/RootStore';
+import {storeContext} from '../stores/RootStore';
 
 import style from '../style';
 
-export default () => {
+export default observer(() => {
+  const {stateStore, messageStore, meStore} = React.useContext(storeContext);
+
   const [message, setMessage] = useState('');
   const textInput = useRef<TextInput>(null);
 
-  const channelID = store.stateStore.selectedChannelID;
+  const channelID = stateStore.selectedChannelID;
 
   const sendPressed = () => {
     if (!message.trim() || !channelID) {
@@ -19,7 +22,7 @@ export default () => {
     textInput.current?.clear();
     setMessage('');
     setTimeout(() => {
-      store.messageStore.sendMessage({
+      messageStore.sendMessage({
         message: msg,
         channelID: channelID,
       });
@@ -28,12 +31,13 @@ export default () => {
   return (
     <View style={styleSheet.container}>
       <TextInput
+        editable={meStore.connected}
         ref={textInput}
         onChangeText={(text) => setMessage(text)}
         value={message}
         style={styleSheet.input}
         multiline={true}
-        placeholder="Send a message"
+        placeholder={meStore.connected ? 'Send a message' : 'Not Connected'}
         placeholderTextColor="gray"
       />
       <View style={styleSheet.buttonContainer}>
@@ -49,7 +53,7 @@ export default () => {
       </View>
     </View>
   );
-};
+});
 
 const styleSheet = StyleSheet.create({
   container: {backgroundColor: 'rgba(0,0,0,0.3)', flexDirection: 'row'},

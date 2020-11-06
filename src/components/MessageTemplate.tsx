@@ -100,7 +100,6 @@ const styleSheet = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.2)',
     borderRadius: 4,
     padding: 3,
-    paddingTop: 0,
     flexShrink: 1,
     borderTopLeftRadius: 0,
     marginRight: 3,

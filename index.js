@@ -9,6 +9,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import LeftDrawer from './src/screens/LeftDrawerScreen';
 import DrawerNav from './src/components/DrawerNav';
 import {LogBox} from 'react-native';
+import {loginPageOptions, mainPageOptions} from './src/utils/screens';
+import ConnectionOverlay from './src/components/ConnectionOverlay';
 
 // mute initial warning (websocket long intervals (fixed in connect event))
 LogBox.ignoreLogs(['Setting a timer for a long period of']);
@@ -36,6 +38,10 @@ Navigation.setLazyComponentRegistrator((componentName) => {
 Navigation.registerComponent('com.nertivia.App', () => App);
 Navigation.registerComponent('com.nertivia.LeftDrawer', () => LeftDrawer);
 Navigation.registerComponent('com.nertivia.DrawerNav', () => DrawerNav);
+Navigation.registerComponent(
+  'com.nertivia.ConnectionOverlay',
+  () => ConnectionOverlay,
+);
 
 Navigation.events().registerComponentDidDisappearListener(
   ({componentId: compId}) => {
@@ -55,62 +61,8 @@ Navigation.events().registerComponentDidAppearListener(
 Navigation.events().registerAppLaunchedListener(async () => {
   const token = await AsyncStorage.getItem('token');
   if (token) {
-    loadMainPage();
+    Navigation.setRoot(mainPageOptions);
   } else {
-    loadLogin();
+    Navigation.setRoot(loginPageOptions);
   }
 });
-
-export function loadLogin() {
-  Navigation.setRoot({
-    root: {
-      component: {
-        name: 'com.nertivia.LoginScreen',
-      },
-    },
-  });
-}
-export function loadMainPage() {
-  Navigation.setRoot({
-    root: {
-      sideMenu: {
-        id: 'DRAWERS',
-        options: {
-          sideMenu: {
-            left: {
-              width: 300,
-            },
-          },
-          statusBar: {
-            drawBehind: true,
-            backgroundColor: 'transparent',
-          },
-        },
-        left: {
-          component: {
-            id: 'LEFT_DRAWER',
-            name: 'com.nertivia.LeftDrawer',
-            options: {
-              statusBar: {
-                drawBehind: true,
-                backgroundColor: 'transparent',
-              },
-            },
-          },
-        },
-        center: {
-          component: {
-            id: 'CENTER_APP',
-            name: 'com.nertivia.App',
-            options: {
-              statusBar: {
-                drawBehind: true,
-                backgroundColor: 'transparent',
-              },
-            },
-          },
-        },
-      },
-    },
-  });
-}

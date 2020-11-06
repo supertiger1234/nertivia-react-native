@@ -2,19 +2,20 @@ import React from 'react';
 import {observer} from 'mobx-react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import Channel from '../interfaces/Channel';
-import {store} from '../stores/RootStore';
+import {storeContext} from '../stores/RootStore';
 import style from '../style';
 import {Navigation} from 'react-native-navigation';
 
 export default observer(({channel}: {channel: Channel}) => {
-  const selected = channel.channelID === store.stateStore.selectedChannelID;
+  const {stateStore} = React.useContext(storeContext);
+  const selected = channel.channelID === stateStore.selectedChannelID;
   return (
     <View style={{overflow: 'hidden', borderRadius: 4, margin: 2}}>
       <Pressable
         style={[styleSheet.button, selected && styleSheet.selected]}
         android_ripple={{color: 'rgba(255, 255, 255, 0.6)'}}
         onPress={() => {
-          store.stateStore.setSelectedChannelID(channel.channelID);
+          stateStore.setSelectedChannelID(channel.channelID);
           Navigation.mergeOptions('DRAWERS', {
             sideMenu: {
               left: {

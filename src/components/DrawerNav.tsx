@@ -1,10 +1,8 @@
 import {autorun} from 'mobx';
 import {observer} from 'mobx-react';
 import React, {Component} from 'react';
-import {Animated, Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import {Animated, StyleSheet, View} from 'react-native';
 import {RootStoreInterface, storeContext} from '../stores/RootStore';
-import style from '../style';
-import config from '../config';
 import DrawerNavItem from './DrawerNavItem';
 import DrawerNavProfileItem from './DrawerNavProfileItem';
 

@@ -1,6 +1,7 @@
 import {action, makeAutoObservable} from 'mobx';
 import {fetchMessages, postMessage} from '../axiosInstance';
 import Message from '../interfaces/Message';
+import {socketInstance} from '../socketio/socketIOInstance';
 import {RootStoreInterface} from './RootStore';
 
 interface MessagesObj {
@@ -111,7 +112,12 @@ export class MessageStore implements IMessageStore {
       created: Date.now(),
       creator: this.rootStore.meStore.user as any,
     });
-    postMessage(trimmedMessage, tempID, payload.channelID)
+    postMessage(
+      trimmedMessage,
+      tempID,
+      payload.channelID,
+      this.rootStore.meStore.socketID || '',
+    )
       .then((res) => {
         const message = res.data.messageCreated;
         this.updateMessage({

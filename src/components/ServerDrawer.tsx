@@ -1,21 +1,20 @@
-import {observer} from 'mobx-react';
-import React, {useEffect, useState} from 'react';
-import {Animated, Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import React, {useState} from 'react';
+import {Animated, StyleSheet, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 import config from '../config';
-import Channel from '../interfaces/Channel';
-import {store} from '../stores/RootStore';
+import {storeContext} from '../stores/RootStore';
 import ChannelTemplate from './ChannelTemplate';
 
 export default () => {
+  const {stateStore, serverStore, channelStore} = React.useContext(
+    storeContext,
+  );
+
   const [mounted, setMounted] = useState(false);
   const scaleBannerAnimVal = new Animated.Value(0.8);
   const transChanListVal = new Animated.Value(30);
   const opacityAnim = new Animated.Value(0);
-  const safeTop = StaticSafeAreaInsets.safeAreaInsetsTop;
-  const server =
-    store.serverStore.servers[store.stateStore.selectedServerID || ''];
+  const server = serverStore.servers[stateStore.selectedServerID || ''];
 
   if (!mounted) {
     setTimeout(() => {
@@ -61,8 +60,8 @@ export default () => {
           transform: [{translateY: transChanListVal}],
           opacity: opacityAnim,
         }}>
-        {store.channelStore
-          .serverChannels(store.stateStore.selectedServerID || '')
+        {channelStore
+          .serverChannels(stateStore.selectedServerID || '')
           .map((channel) => (
             <ChannelTemplate channel={channel} key={channel.channelID} />
           ))}

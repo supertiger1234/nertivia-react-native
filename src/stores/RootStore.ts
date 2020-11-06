@@ -31,4 +31,4 @@ export class RootStore {
 
 export const store = new RootStore();
 
-export const storeContext = React.createContext(store);
+export const storeContext = React.createContext<RootStoreInterface>(store);

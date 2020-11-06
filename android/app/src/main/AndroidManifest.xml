@@ -2,6 +2,9 @@
   package="com.nertivia">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Used to fix random socket io disconnects. MAY cause battery drains but idk :/ -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
 
     <application
       android:name=".MainApplication"

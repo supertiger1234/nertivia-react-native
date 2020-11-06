@@ -8,15 +8,44 @@ import BackgroundTimer from 'react-native-background-timer';
 import {socketInstance} from './socketio/socketIOInstance';
 import {RootStoreInterface, store, storeContext} from './stores/RootStore';
 import style from './style';
+import {autorun, reaction} from 'mobx';
+import {Navigation} from 'react-native-navigation';
+const Wakeful = require('react-native-wakeful');
 
 @observer
 export default class App extends Component {
   static contextType = storeContext;
   interval: number | undefined;
   componentDidMount() {
-    // connects
+    // used to fix socket io disconnects. (May cause battery drains when the app is opened)
+    let wakeful = new Wakeful();
+    wakeful.acquire();
+
     socketInstance();
     AppState.addEventListener('change', this.onAppStateChange);
+    this.showConnectionOverlay();
+    reaction(
+      () => this.store.meStore.connected,
+      () => this.showConnectionOverlay(),
+    );
+  }
+  showConnectionOverlay() {
+    if (this.store.meStore.connected) return;
+    Navigation.showOverlay({
+      component: {
+        id: 'CONNECTION_OVERLAY',
+        name: 'com.nertivia.ConnectionOverlay',
+        options: {
+          overlay: {
+            interceptTouchOutside: false,
+          },
+          statusBar: {
+            drawBehind: true,
+            backgroundColor: 'transparent',
+          },
+        },
+      },
+    });
   }
   componentWillUnmount() {
     AppState.removeEventListener('change', this.onAppStateChange);

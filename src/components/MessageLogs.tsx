@@ -4,12 +4,14 @@ import React from 'react';
 import {FlatList, View} from 'react-native';
 
 import Message from '../interfaces/Message';
-import {store} from '../stores/RootStore';
+import {storeContext} from '../stores/RootStore';
 import MessageTemplate from './MessageTemplate';
 
 export default observer(() => {
-  const channelID = store.stateStore.selectedChannelID;
-  const messages = store.messageStore.groupedChannelMessages(channelID || '');
+  const {stateStore, messageStore} = React.useContext(storeContext);
+
+  const channelID = stateStore.selectedChannelID;
+  const messages = messageStore.groupedChannelMessages(channelID || '');
 
   const renderRow = ({item}: {item: Message}) => {
     return <MessageTemplate message={item} />;

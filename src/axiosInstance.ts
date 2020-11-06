@@ -1,7 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios, {AxiosResponse} from 'axios';
 import Message from './interfaces/Message';
-import {socketInstance} from './socketio/socketIOInstance';
 
 const instance = Axios.create({
   baseURL: 'https://supertiger.tk/api/',
@@ -49,10 +48,11 @@ export function postMessage(
   message: string,
   tempID: string,
   channelID: string,
+  socketID: string,
 ): Promise<AxiosResponse<PostMessageResponse>> {
   return instance.post(`messages/channels/${channelID}`, {
     message,
     tempID,
-    socketID: socketInstance().id,
+    socketID,
   });
 }
